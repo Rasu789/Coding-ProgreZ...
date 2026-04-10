@@ -1,0 +1,33 @@
+class Solution {
+public:
+    ListNode* mergeTwoLL(ListNode* list1, ListNode* list2) {
+        if (!list1 && !list2) return NULL;
+        if (!list1) return list2;
+        if (!list2) return list1;
+
+        if (list1->val <= list2->val) {
+            list1->next = mergeTwoLL(list1->next, list2);
+            return list1;
+        } else {
+            list2->next = mergeTwoLL(list1, list2->next);
+            return list2;
+        }
+    }
+
+    ListNode* partitionAndMerge(int start, int end, vector<ListNode*>& lists) {
+        if (start > end) return NULL;
+        if (start == end) return lists[start];
+
+        int mid = start + (end - start) / 2;
+
+        ListNode* L1 = partitionAndMerge(start, mid, lists);
+        ListNode* L2 = partitionAndMerge(mid + 1, end, lists);
+
+        return mergeTwoLL(L1, L2);
+    }
+
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        int end = lists.size() - 1;
+        return partitionAndMerge(0, end, lists);
+    }
+};
